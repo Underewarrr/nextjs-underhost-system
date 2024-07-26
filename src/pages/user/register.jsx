@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
 import Image from "next/image";
 import Navigation from "../../components/Navbar";
 import Link from "next/link";
@@ -17,6 +17,10 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("BR");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const router = useRouter();
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -34,16 +38,11 @@ const Register = () => {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+        background-color: #0E0E2F;
       }
 
       .content-wrap {
         flex: 1;
-      }
-
-      .register-container {
-        position: relative;
-        right: 150px;
-        top: 5px;
       }
 
       .register-background-image {
@@ -58,18 +57,16 @@ const Register = () => {
 
       .register-form-container {
         width: 486px;
-        height: 621px;
         padding: 20px;
         background-color: #181818;
         color: white;
-        position: absolute;
-        top: 20%;
-        left: 50%;
-        transform: translateX(-50%);
+        margin: 0 auto;
+        margin-top: 10%;
         border-radius: 10px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        align-items: center;
       }
 
       .register-input-field {
@@ -114,12 +111,13 @@ const Register = () => {
         font-size: 0.8em;
         color: white;
         padding: 10px;
-        position: relative;
+        position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;
         text-align: center;
         background-color: #181818;
+        z-index: 1000;
       }
 
       .signup {
@@ -191,13 +189,9 @@ const Register = () => {
         color: white;
         width: 60%;
         font-weight: bold;
-        position: absolute;
         font-family: Poppins;
-        top: calc(5% + 621px + 20px);
-        left: 35%;
-
-        transform: translateX(-50%);
         text-align: center;
+        margin: 20px auto;
       }
 
       .phone-input-container {
@@ -217,13 +211,18 @@ const Register = () => {
         font-size: 0.8em;
         color: white;
         padding: 50px;
-        position: absolute;
-        bottom: 10px;
+        text-align: center;
       }
 
       .login-footer a {
         color: #FFD723;
         text-decoration: none;
+      }
+
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        margin: 10px 0;
       }
     `;
     document.head.appendChild(style);
@@ -253,10 +252,10 @@ const Register = () => {
   };
 
   const stepTexts = [
-    "What’s your email?",
-    "Choose a username",
-    "Choose a password",
-    "Enter your phone number",
+    "Qual seu email?",
+    "Escolha seu nome",
+    "Escolha sua senha",
+    "Coloque o seu numero de celular",
   ];
 
   const handleCountryChange = (e) => {
@@ -265,6 +264,8 @@ const Register = () => {
   };
 
   const handleFormSubmit = async () => {
+    setLoading(true);
+    setErrorMessage("");
     const formData = {
       email,
       username,
@@ -281,10 +282,17 @@ const Register = () => {
         body: JSON.stringify(formData),
       });
       const result = await response.json();
-      console.log("Registration successful:", result);
-      useRouter().push("/user/login");
+      if (response.ok) {
+        console.log("Registration successful:", result);
+        router.push("/user/login");
+      } else {
+        setErrorMessage(result.message);
+      }
     } catch (error) {
       console.error("Registration failed:", error);
+      setErrorMessage("Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -311,9 +319,16 @@ const Register = () => {
           site_name: "Underhost",
         }}
       />
+      <Navigation />
       <div className="page-container">
         <div className="content-wrap">
-          
+          <Image
+            src={backGroundimg}
+            alt="Background Image"
+            quality="100"
+            layout="fill"
+            className="register-background-image"
+          />
           <div className="register-container">
             <Container>
               <div className="register-form-container">
@@ -337,20 +352,28 @@ const Register = () => {
                     </div>
                   </div>
                   <h5>{stepTexts[step]}</h5>
+                  {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+                  {loading && (
+                    <div className="loading-spinner">
+                      <Spinner animation="border" role="status">
+                        <span className="sr-only">Carregando...</span>
+                      </Spinner>
+                    </div>
+                  )}
                   <Form>
                     {step === 0 && (
                       <>
                         <Form.Group controlId="formEmail">
                           <Form.Control
                             type="email"
-                            placeholder="Enter email"
+                            placeholder="email"
                             className="register-input-field"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                           />
                         </Form.Group>
                         <p style={{ marginTop: "15%", fontSize: "13px" }}>
-                          YOU CAN ALSO CREATE AN ACCOUNT WITH:
+                          Faça login com:
                         </p>
                         <div className="register-social-buttons">
                           <FaFacebook className="register-icon" />
@@ -361,10 +384,10 @@ const Register = () => {
                     )}
                     {step === 1 && (
                       <Form.Group controlId="formUsername">
-                        <Form.Label className="register-input-field-label">Username</Form.Label>
+                        <Form.Label className="register-input-field-label">Nome</Form.Label>
                         <Form.Control
                           type="text"
-                          placeholder="Enter username"
+                          placeholder="nome"
                           className="register-input-field"
                           value={username}
                           onChange={(e) => setUsername(e.target.value)}
@@ -374,20 +397,20 @@ const Register = () => {
                     {step === 2 && (
                       <>
                         <Form.Group controlId="formPassword">
-                          <Form.Label className="register-input-field-label">Password</Form.Label>
+                          <Form.Label className="register-input-field-label">Senha</Form.Label>
                           <Form.Control
                             type="password"
-                            placeholder="Enter password"
+                            placeholder="senha"
                             className="register-input-field"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                           />
                         </Form.Group>
                         <Form.Group controlId="formConfirmPassword">
-                          <Form.Label className="register-input-field-label">Confirm Password</Form.Label>
+                          <Form.Label className="register-input-field-label">Confirmar Senha</Form.Label>
                           <Form.Control
                             type="password"
-                            placeholder="Confirm password"
+                            placeholder="confirmar senha"
                             className="register-input-field"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -397,7 +420,7 @@ const Register = () => {
                     )}
                     {step === 3 && (
                       <Form.Group controlId="formPhoneNumber">
-                        <Form.Label className="register-input-field-label">Phone Number</Form.Label>
+                        <Form.Label className="register-input-field-label">Numero de celular</Form.Label>
                         <div className="phone-input-container">
                           <img
                             src={`https://flagsapi.com/${countryCode}/flat/24.png`}
@@ -406,7 +429,7 @@ const Register = () => {
                           />
                           <Form.Control
                             type="text"
-                            placeholder="Enter phone number"
+                            placeholder="035 9 8888-8888"
                             className="register-input-field"
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
@@ -420,15 +443,7 @@ const Register = () => {
                           style={{ marginTop: "10px" }}
                         >
                           <option value="BR">Brazil</option>
-                          <option value="US">United States</option>
-                          <option value="CA">Canada</option>
-                          <option value="GB">United Kingdom</option>
-                          <option value="AU">Australia</option>
-                          <option value="IN">India</option>
-                          <option value="DE">Germany</option>
-                          <option value="FR">France</option>
-                          <option value="JP">Japan</option>
-                          <option value="CN">China</option>
+                         
                         </Form.Control>
                       </Form.Group>
                     )}
@@ -437,7 +452,7 @@ const Register = () => {
                     <Button
                       type="button"
                       onClick={handleNextStep}
-                      disabled={isButtonDisabled()}
+                      disabled={isButtonDisabled() || loading}
                     >
                       <svg
                         role="img"
@@ -451,17 +466,17 @@ const Register = () => {
                     </Button>
                   </div>
                   <p className="login-footer">
-                    ALREADY HAVE AN ACCOUNT? <Link href="/user/login">Login here</Link>
+                    Você ja tem uma conta? <Link href="/user/login">Entrar Aqui</Link>
                   </p>
                 </div>
               </div>
             </Container>
           </div>
-          <p className="create-account">CREATE AN ACCOUNT</p>
+          <p className="create-account">Criar uma nova conta</p>
         </div>
       </div>
       <footer className="register-footer">
-        this site is protected and its privacy policy and terms of service apply. © 2024 Altern
+      Este site é protegido e sua política de privacidade e termos de serviço se aplicam. © 2024 UnderHost
       </footer>
     </>
   );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
 import Image from "next/image";
 import Navigation from "../../components/Navbar";
 import Link from "next/link";
@@ -12,6 +12,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -106,14 +107,6 @@ const Login = () => {
         color: white;
       }
 
-      .login-footer {
-        font-size: 0.8em;
-        color: white;
-        position: absolute;
-        bottom: 10px;
-        text-align: center;
-      }
-
       .login {
         display: flex;
         flex-direction: column;
@@ -182,6 +175,12 @@ const Login = () => {
         margin-top: 10px;
       }
 
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        margin: 10px 0;
+      }
+
       .register-footer {
         font-size: 0.8em;
         color: white;
@@ -204,6 +203,8 @@ const Login = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMessage("");
     const formData = { email, password };
     try {
       const response = await fetch("/api/user/login", {
@@ -218,14 +219,15 @@ const Login = () => {
         console.log("Login successful:", result);
         localStorage.setItem('key', result.token);
         localStorage.setItem('email', email);
-
         router.push("/user/dashboard");
       } else {
         setErrorMessage(result.message);
       }
     } catch (error) {
       console.error("Login failed:", error);
-      setErrorMessage("Login failed. Please try again.");
+      setErrorMessage("Falha no login. Por favor, tente novamente.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -261,34 +263,42 @@ const Login = () => {
           <div className="login-form-container">
             <div className="login" data-testid="login-form">
               <Form onSubmit={handleFormSubmit}>
+                {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+                {loading && (
+                  <div className="loading-spinner">
+                    <Spinner animation="border" role="status">
+                      <span className="sr-only">Carregando...</span>
+                    </Spinner>
+                  </div>
+                )}
                 <Form.Group controlId="formEmail">
-                  <Form.Label className="login-input-field-label">Email address</Form.Label>
+                  <Form.Label className="login-input-field-label">Endereço de Email</Form.Label>
                   <Form.Control
                     type="email"
-                    placeholder="Enter email"
+                    placeholder="Digite seu email"
                     className="login-input-field"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </Form.Group>
                 <Form.Group controlId="formPassword">
-                  <Form.Label className="login-input-field-label">Password</Form.Label>
+                  <Form.Label className="login-input-field-label">Senha</Form.Label>
                   <Form.Control
                     type="password"
-                    placeholder="Enter password"
+                    placeholder="Digite sua senha"
                     className="login-input-field"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </Form.Group>
-                <p style={{ marginTop: "20%", fontSize: "15px" }}>YOU CAN ALSO LOGIN WITH:</p>
+                <p style={{ marginTop: "20%", fontSize: "15px" }}>VOCÊ TAMBÉM PODE FAZER LOGIN COM:</p>
                 <div className="login-social-buttons">
                   <FaFacebook className="login-icon" />
                   <FaGoogle className="login-icon" />
                   <FaDiscord className="login-icon" />
                 </div>
                 <div className="login-submit" style={{ marginTop: "25%" }}>
-                  <Button type="submit">
+                  <Button type="submit" disabled={loading}>
                     <svg
                       role="img"
                       viewBox="0 0 32 32"
@@ -300,14 +310,13 @@ const Login = () => {
                     </svg>
                   </Button>
                 </div>
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
-                <p className="login-footer">DON&apos;T HAVE AN ACCOUNT? <Link href="/user/register">Register here</Link></p>
+                <p className="login-footer">NÃO TEM UMA CONTA? <Link href="/user/register">Cadastre-se aqui</Link></p>
               </Form>
             </div>
           </div>
         </Container>
         <footer className="register-footer">
-          this site is protected and its privacy policy and terms of service apply. © 2024 UnderHost
+          Este site é protegido e sua política de privacidade e termos de serviço se aplicam. © 2024 UnderHost
         </footer>
       </div>
     </>
