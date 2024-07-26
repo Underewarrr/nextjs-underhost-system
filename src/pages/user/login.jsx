@@ -5,8 +5,7 @@ import Image from "next/image";
 import Navigation from "../../components/Navbar";
 import Link from "next/link";
 import { FaFacebook, FaGoogle, FaDiscord } from "react-icons/fa";
-import backGroundimg from "../../imgs/banner2.png";
-import footerImg from "../../imgs/altern-51.png"; // Ensure this path is correct based on your project structure
+import logoImg from "../../imgs/banner.png"; // Certifique-se de que o caminho da imagem esteja correto
 import { NextSeo } from "next-seo";
 
 const Login = () => {
@@ -30,9 +29,10 @@ const Login = () => {
 
       .login-container {
         position: relative;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
+        width: 100%;
+        min-height: 100vh;
+        overflow: auto; /* Allow scrolling */
+        padding-bottom: 60px; /* Space for fixed footer */
       }
 
       .login-background-image {
@@ -45,20 +45,27 @@ const Login = () => {
         object-fit: cover;
       }
 
+      .login-logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 5%;
+        margin-bottom: 20px;
+      }
+
       .login-form-container {
-        width: 486px;
-        height: 500px;
+        max-width: 486px;
+        width: 90%; /* Make it responsive */
         padding: 20px;
         background-color: #181818;
         color: white;
-        position: absolute;
-        top: 20%;
-        left: 50%;
-        transform: translateX(-50%);
+        margin: 0 auto;
         border-radius: 10px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box; /* Include padding in width calculation */
       }
 
       .login-input-field {
@@ -104,6 +111,7 @@ const Login = () => {
         color: white;
         position: absolute;
         bottom: 10px;
+        text-align: center;
       }
 
       .login {
@@ -174,16 +182,17 @@ const Login = () => {
         margin-top: 10px;
       }
 
-       .register-footer {
+      .register-footer {
         font-size: 0.8em;
         color: white;
         padding: 10px;
-        position: relative;
+        position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;
         text-align: center;
         background-color: #181818;
+        z-index: 1000; /* Ensures the footer stays above other elements */
       }
     `;
     document.head.appendChild(style);
@@ -207,9 +216,8 @@ const Login = () => {
       const result = await response.json();
       if (response.ok) {
         console.log("Login successful:", result);
-        // Handle successful login (e.g., store token, redirect to dashboard)
-        localStorage.setItem('key', result.token)
-        localStorage.setItem('email', email)
+        localStorage.setItem('key', result.token);
+        localStorage.setItem('email', email);
 
         router.push("/user/dashboard");
       } else {
@@ -223,7 +231,8 @@ const Login = () => {
 
   return (
     <>
-    <NextSeo
+      <Navigation />
+      <NextSeo
         title="Planos de Hospedagem - Underhost"
         description="Descubra nossos planos de hospedagem imbatíveis para websites e VPS. A Underhost oferece opções flexíveis e acessíveis para atender às suas necessidades."
         canonical="https://www.underhost.com/"
@@ -244,15 +253,11 @@ const Login = () => {
           site_name: "Underhost",
         }}
       />
-      <div className="login-container">
-        <Image
-          src={backGroundimg}
-          alt="Background Image"
-          quality="100"
-          layout="fill"
-          className="login-background-image"
-        />
+      <div className="login-container" style={{ backgroundColor: "#0E0E2F" }}>
         <Container>
+          <div className="login-logo">
+            <Image src={logoImg} alt="UnderHost Logo" width={605} height={65} />
+          </div>
           <div className="login-form-container">
             <div className="login" data-testid="login-form">
               <Form onSubmit={handleFormSubmit}>
@@ -282,7 +287,7 @@ const Login = () => {
                   <FaGoogle className="login-icon" />
                   <FaDiscord className="login-icon" />
                 </div>
-                <div className="login-submit" style={{ marginTop: "25%"}}>
+                <div className="login-submit" style={{ marginTop: "25%" }}>
                   <Button type="submit">
                     <svg
                       role="img"
@@ -302,10 +307,9 @@ const Login = () => {
           </div>
         </Container>
         <footer className="register-footer">
-          this site is protected and its privacy policy and terms of service apply. © 2024 Altern
+          this site is protected and its privacy policy and terms of service apply. © 2024 UnderHost
         </footer>
       </div>
-     
     </>
   );
 };

@@ -313,13 +313,7 @@ const Register = () => {
       />
       <div className="page-container">
         <div className="content-wrap">
-          <Image
-            src={backGroundimg}
-            alt="Background Image"
-            quality="100"
-            layout="fill"
-            className="register-background-image"
-          />
+          
           <div className="register-container">
             <Container>
               <div className="register-form-container">

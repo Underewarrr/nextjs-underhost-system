@@ -89,7 +89,7 @@ const Index = () => {
                   layout="responsive" 
                   width={550} 
                   height={605} 
-                  quality={67}
+                  quality={100}
                   style={{ paddingRight: "4rem"}}
                 />
               </div>
