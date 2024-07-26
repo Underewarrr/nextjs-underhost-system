@@ -27,26 +27,21 @@ const ServerHostingPage = () => {
           {
             name: "TFS",
             versions: [
-              { version: "7.4", types: [{ name: "Global", pricePerSlot: 1.7 }, { name: "Baiak", pricePerSlot: 1.4 }] },
-              { version: "8.0", types: [{ name: "Global", pricePerSlot: 1.9 }, { name: "Baiak", pricePerSlot: 1.6 }] },
-              { version: "8.6", types: [{ name: "Global", pricePerSlot: 2.4 }, { name: "Baiak", pricePerSlot: 1.8 }] },
-              { version: "10.98", types: [{ name: "Global", pricePerSlot: 2.8 }, { name: "Baiak", pricePerSlot: 2.5 }] },
-              
+              { version: "7.4", types: [{ name: "Global", pricePerSlot: 1.5 }, { name: "Baiak", pricePerSlot: 1.2 }] },
+              { version: "12.41", types: [{ name: "Global", pricePerSlot: 1.7 }, { name: "Baiak", pricePerSlot: 1.4 }] }
             ]
           },
           {
             name: "OTX",
             versions: [
-              { version: "7.4", types: [{ name: "Global", pricePerSlot: 1.9 }, { name: "Baiak", pricePerSlot: 1.6 }] },
-              { version: "8.0", types: [{ name: "Global", pricePerSlot: 2.1 }, { name: "Baiak", pricePerSlot: 1.8 }] },
-              { version: "8.6", types: [{ name: "Global", pricePerSlot: 2.6 }, { name: "Baiak", pricePerSlot: 2 }] },
-              { version: "10.98", types: [{ name: "Global", pricePerSlot: 3 }, { name: "Baiak", pricePerSlot: 2.8 }] },
+              { version: "7.5", types: [{ name: "Global", pricePerSlot: 1.6 }, { name: "Baiak", pricePerSlot: 1.3 }] },
+              { version: "10.98", types: [{ name: "Global", pricePerSlot: 1.8 }, { name: "Baiak", pricePerSlot: 1.5 }] }
             ]
           },
           {
             name: "CANARY",
             versions: [
-              { version: "12+", types: [{ name: "Global", pricePerSlot: 6 }] }
+              { version: "12+", types: [{ name: "Global", pricePerSlot: 2.0 }] }
             ]
           }
         ]
@@ -149,7 +144,7 @@ const ServerHostingPage = () => {
     const calculatedMonthlyPrice = selectedType.pricePerSlot * slots;
     let calculatedInitialSetupCost = 0;
 
-    if (services.installation) calculatedInitialSetupCost += 180;
+    if (services.installation) calculatedInitialSetupCost += 50;
     if (services.compilation) calculatedInitialSetupCost += 30;
 
     if (payments.MercadoPagoPix) calculatedInitialSetupCost += 80;
@@ -266,12 +261,18 @@ const ServerHostingPage = () => {
                             <Form.Label>Serviços Opcionais</Form.Label>
                             <Form.Check 
                               type="checkbox"
-                              label="Configuração Inicial (+R$180,00)"
+                              label="Instalação (+R$ 50,00)"
                               name="installation"
                               checked={additionalServices.installation}
                               onChange={handleAdditionalServicesChange}
                             />
-                           
+                            <Form.Check 
+                              type="checkbox"
+                              label="Compilação (+R$ 30,00)"
+                              name="compilation"
+                              checked={additionalServices.compilation}
+                              onChange={handleAdditionalServicesChange}
+                            />
                           </Form.Group>
                           <ListGroup variant="flush">
                             <ListGroup.Item>Nome da Engine: {selectedEngine}</ListGroup.Item>
