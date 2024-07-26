@@ -144,7 +144,7 @@ const ServerHostingPage = () => {
     const calculatedMonthlyPrice = selectedType.pricePerSlot * slots;
     let calculatedInitialSetupCost = 0;
 
-    if (services.installation) calculatedInitialSetupCost += 50;
+    if (services.installation) calculatedInitialSetupCost += 150;
     if (services.compilation) calculatedInitialSetupCost += 30;
 
     if (payments.MercadoPagoPix) calculatedInitialSetupCost += 80;
@@ -261,18 +261,12 @@ const ServerHostingPage = () => {
                             <Form.Label>Serviços Opcionais</Form.Label>
                             <Form.Check 
                               type="checkbox"
-                              label="Instalação (+R$ 50,00)"
+                              label="Instalação (+R$ 150,00)"
                               name="installation"
                               checked={additionalServices.installation}
                               onChange={handleAdditionalServicesChange}
                             />
-                            <Form.Check 
-                              type="checkbox"
-                              label="Compilação (+R$ 30,00)"
-                              name="compilation"
-                              checked={additionalServices.compilation}
-                              onChange={handleAdditionalServicesChange}
-                            />
+                            
                           </Form.Group>
                           <ListGroup variant="flush">
                             <ListGroup.Item>Nome da Engine: {selectedEngine}</ListGroup.Item>
