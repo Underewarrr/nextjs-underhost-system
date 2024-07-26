@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Container, Row, Col, Card, Button, ListGroup, Modal, ProgressBar, Accordion, Navbar, Nav } from "react-bootstrap";
 import { FaServer, FaCogs, FaChevronLeft, FaChevronRight, FaFileAlt, FaEnvelope, FaGlobe, FaFolderOpen, FaTerminal, FaPowerOff, FaPlay, FaRedo } from "react-icons/fa";
 import Navigation from "../../components/Navbar";
-
+import ProtectedRoute from "../../components/ProtectedRoute";
 const Dashboard = () => {
   const router = useRouter();
   const [currentPlan, setCurrentPlan] = useState(null);
@@ -71,6 +71,7 @@ const Dashboard = () => {
 
   return (
     <>
+      <ProtectedRoute>
       <Navigation/>
       <div className="dashboard-layout">
         <div className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
@@ -264,6 +265,7 @@ const Dashboard = () => {
           margin-top: 10px;
         }
       `}</style>
+      </ProtectedRoute>
     </>
   );
 };
