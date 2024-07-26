@@ -291,29 +291,24 @@ const Register = () => {
   return (
     <>
       <NextSeo
-        title="Register - Altern Online"
-        description="Altern Online and become a PVP master. Compete in competitive arenas and win real prizes."
-        canonical="https://www.altern-online.com/"
+        title="Planos de Hospedagem - Underhost"
+        description="Descubra nossos planos de hospedagem imbatíveis para websites e VPS. A Underhost oferece opções flexíveis e acessíveis para atender às suas necessidades."
+        canonical="https://www.underhost.com/"
         openGraph={{
-          url: "https://www.altern-online.com/",
-          title: "Become a PVP Master - Altern Online",
+          url: "https://www.underhost.com/",
+          title: "Planos de Hospedagem Acessíveis - Underhost",
           description:
-            "Join Altern Online and become a PVP master. Compete in competitive arenas and win real prizes.",
+            "Escolha entre uma variedade de planos de hospedagem para websites e VPS na Underhost. Soluções flexíveis, confiáveis e econômicas para todas as suas necessidades de hospedagem.",
           images: [
             {
-              url: "https://www.altern-online.com/images/banner.png",
-              width: 800,
-              height: 600,
-              alt: "Altern Online Banner",
+              url: "https://i.imgur.com/1FIUZZx.png",
+              width: 179,
+              height: 177,
+              alt: "Banner Underhost",
               type: "image/png",
             },
           ],
-          site_name: "Altern Online",
-        }}
-        twitter={{
-          handle: "@altern_online",
-          site: "@altern_online",
-          cardType: "summary_large_image",
+          site_name: "Underhost",
         }}
       />
       <div className="page-container">

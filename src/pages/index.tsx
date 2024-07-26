@@ -50,29 +50,25 @@ const Index = () => {
   return (
     <>
       <NextSeo
-        title="Become a PVP Master - Altern Online"
-        description="Join Altern Online and become a PVP master. Compete in competitive arenas and win real prizes."
-        canonical="https://www.altern-online.com/"
+        title="Hospedagem e VPS com Confiabilidade e Performance!"
+        description="Hospedagem de websites e VPS com preços imbatíveis! Escolha a Underhost."
+        canonical="https://www.underhost.cloud/"
         openGraph={{
-          url: 'https://www.altern-online.com/',
-          title: 'Become a PVP Master - Altern Online',
-          description: 'Join Altern Online and become a PVP master. Compete in competitive arenas and win real prizes.',
+          url: 'https://www.underhost.cloud/',
+          title: 'BeHospedagem e VPS com Confiabilidade e Performance!',
+          description: 'Hospedagem de websites e VPS com preços imbatíveis! Escolha a Underhost.',
           images: [
             {
-              url: 'https://www.altern-online.com/images/banner.png',
-              width: 800,
-              height: 600,
-              alt: 'Altern Online Banner',
+              url: 'https://i.imgur.com/1FIUZZx.png',
+              width: 179,
+              height: 177,
+              alt: 'Underhost Banner',
               type: 'image/png',
             },
           ],
-          site_name: 'Altern Online',
+          site_name: 'Underhost',
         }}
-        twitter={{
-          handle: '@altern_online',
-          site: '@altern_online',
-          cardType: 'summary_large_image',
-        }}
+        
       />
       <Navigation />
       <div style={{ backgroundColor: "#0E0E2F", minHeight: "100vh", color: "#fff", paddingTop: "70px" }}>
@@ -80,26 +76,28 @@ const Index = () => {
           <Row className="align-items-center" style={{ minHeight: "80vh" }}>
             <Col md={6} className="text-center">
               <div className="px-4 px-md-0">
-                <h1 style={{ fontSize: "9rem" }}>Become a PVP master</h1>
-                <p style={{ fontSize: "1.5rem" }}>Altern Online is a competitive arena that rewards the best players with real prizes.</p>
-                <Button variant="warning" href="/user/register">Sign-Up</Button>
+                <h1 style={{ fontSize: "9rem" }}>Hospedagem e VPS</h1>
+                <p style={{ fontSize: "1.5rem" }}>Na Underhost, oferecemos servidores de alto desempenho para garantir que seu site ou VPS esteja sempre disponível e funcionando perfeitamente. Conheça nossos planos acessíveis e de alta qualidade!.</p>
+                <Button variant="warning" href="/user/plans">Confira</Button>
               </div>
             </Col>
             <Col md={6} className="d-flex justify-content-end pe-0">
-              <div style={{ maxWidth: "100%", height: "auto", width: "100%", paddingRight: "0" }}>
+              <div style={{ maxWidth: "100%", height: "auto", width: "auto", paddingRight: "0" }}>
                 <Image 
                   src={largeImage} 
                   alt="Large Image" 
                   layout="responsive" 
-                  width={700} 
-                  height={475} 
+                  width={550} 
+                  height={605} 
+                  quality={67}
+                  style={{ paddingRight: "4rem"}}
                 />
               </div>
             </Col>
           </Row>
         </Container>
         <footer className="register-footer">
-          <p className="footer-text">© Close Beta Soon</p>
+          <p className="footer-text">© Underhost. Todos os direitos reservados.</p>
           <Image
             className="footer-img"
             src={footerImg} 

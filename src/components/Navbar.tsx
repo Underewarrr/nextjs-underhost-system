@@ -7,10 +7,11 @@ const Navigation = () => {
 
   return (
     <Navbar
-      className={"navbar-custom"}
+      className="navbar-custom"
       variant="dark"
       expand="lg"
       fixed="top"
+      style={{ backgroundColor: '#0E0E2F' }}
     >
       <Container>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -21,33 +22,19 @@ const Navigation = () => {
                 href="/"
                 className={`nav-link text-white ${router.pathname === "/" ? styles.active : ""}`}
               >
-                Home
+                UnderHost
               </Nav.Link>
             </NavItem>
             <NavItem>
               <Nav.Link
-                href="/about"
-                className={`nav-link text-white ${router.pathname === "/about" ? styles.active : ""}`}
+                href="/user/plans"
+                className={`nav-link text-white ${router.pathname === "/user/plans" ? styles.active : ""}`}
               >
-                Download
+                Hospedagem/VPS
               </Nav.Link>
             </NavItem>
-            <NavItem>
-              <Nav.Link
-                href="/about"
-                className={`nav-link text-white ${router.pathname === "/about" ? styles.active : ""}`}
-              >
-                Pokedex
-              </Nav.Link>
-            </NavItem>
-            <NavItem>
-              <Nav.Link
-                href="/about"
-                className={`nav-link text-white ${router.pathname === "/about" ? styles.active : ""}`}
-              >
-                Wiki
-              </Nav.Link>
-            </NavItem>
+           
+            
             <NavItem>
               <Nav.Link
                 href="/user/login"
