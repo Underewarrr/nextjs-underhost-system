@@ -55,7 +55,7 @@ const Index = () => {
         canonical="https://www.underhost.cloud/"
         openGraph={{
           url: 'https://www.underhost.cloud/',
-          title: 'BeHospedagem e VPS com Confiabilidade e Performance!',
+          title: 'Hospedagem e VPS com Confiabilidade e Performance!',
           description: 'Hospedagem de websites e VPS com preços imbatíveis! Escolha a Underhost.',
           images: [
             {
