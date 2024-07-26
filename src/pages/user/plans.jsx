@@ -14,15 +14,15 @@ const HostingPlans = () => {
   const [duration, setDuration] = useState(1); // 1 for monthly, 12 for annual
 
   const basePriceHD = 5.95;
-  const corePrice = 7;
+  const corePrice = 5;
   const memoryPrice = 7;
-  const storagePricePer10GB = 2.0;
+  const storagePricePer10GB = 1.0;
   const ipPrice = 79.99; // Price per additional IP
   const storagePrice = Math.ceil(vpsStorage / 10) * storagePricePer10GB;
   const ssdMultiplier = isSSD ? 1.25 : 1;
 
   const vpsPrice =
-    (basePriceHD + (vpsCores - 2) * corePrice + (vpsMemory - 2) * memoryPrice + storagePrice + additionalIPs * ipPrice) *
+    (basePriceHD + (vpsCores) * corePrice + (vpsMemory) * memoryPrice + storagePrice + additionalIPs * ipPrice) *
     ssdMultiplier;
 
   // Discounted prices for different durations
