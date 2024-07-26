@@ -1,0 +1,48 @@
+.container-full {
+    background: url('/path-to-your-background-image.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .form-container {
+    width: 30%;
+    padding: 40px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    margin-top: 10%;
+    border-radius: 10px;
+  }
+  
+  .input-field {
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    padding: 10px;
+  }
+  
+  .login-icons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  
+  .create-account {
+    font-size: 1.5em;
+    color: white;
+  }
+  
+  .footer {
+    font-size: 0.8em;
+    color: white;
+    padding: 10px;
+  }
+  
+  .icon {
+    cursor: pointer;
+    font-size: 2em;
+    color: white;
+  }
+  

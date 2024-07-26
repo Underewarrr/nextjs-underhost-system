@@ -1,0 +1,18 @@
+.navbar-custom {
+    background-color: #0E0E2F !important;
+  }
+  
+  .nav-link {
+    color: white !important;
+    text-decoration: none !important;
+  }
+  
+  .nav-link:hover {
+    border-bottom: 2px solid white;
+  }
+  
+  .active {
+    border-bottom: 2px solid white;
+  }
+  
+  
