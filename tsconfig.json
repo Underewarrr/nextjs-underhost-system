@@ -17,6 +17,6 @@
     "incremental": true,
     "types": ["node"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/user/register.jsx", "src/pages/user/login.jsx", "src/pages/api/user/user.js", "src/pages/admin/list/user/email.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/user/register.jsx", "src/pages/user/login.jsx", "src/pages/api/user/user.js", "src/pages/admin/list/user/email.jsx", "src/pages/api/user/vps.js"],
   "exclude": ["node_modules"]
 }

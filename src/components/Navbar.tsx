@@ -30,16 +30,17 @@ const Navigation = () => {
                 href="/user/plans"
                 className={`nav-link text-white ${router.pathname === "/user/plans" ? styles.active : ""}`}
               >
-                Hospedagem/VPS
+                VPS
               </Nav.Link>
             </NavItem>
             <NavItem>
-              <Nav.Link
-                href="/user/plans/gameservers"
+            <Nav.Link
+                href="/user/dashboard"
                 className={`nav-link text-white ${router.pathname === "/user/plans/gameservers" ? styles.active : ""}`}
               >
-                Servidores de jogos
+                Painel
               </Nav.Link>
+              
             </NavItem>
             <NavItem>
               <Nav.Link

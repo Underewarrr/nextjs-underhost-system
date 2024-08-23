@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Card, Button, Form, ListGroup } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import Image from "next/image";
 import Navigation from "../../components/Navbar";
 import { NextSeo } from "next-seo";
 import footerImg from "../../imgs/altern-51.png";
+import Script from "next/script";
+import QRCode from "qrcode.react"; // Biblioteca para gerar o QR Code
 
 const HostingPlans = () => {
   const [vpsCores, setVpsCores] = useState(2);
@@ -12,6 +14,11 @@ const HostingPlans = () => {
   const [isSSD, setIsSSD] = useState(true);
   const [additionalIPs, setAdditionalIPs] = useState(0);
   const [duration, setDuration] = useState(1); // 1 for monthly, 12 for annual
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [preferenceId, setPreferenceId] = useState(null); // Novo estado para armazenar o preferenceId
+  const [initPoint, setInitPoint] = useState(""); // Novo estado para armazenar o init_point (URL do pagamento)
 
   const basePriceHD = 5.95;
   const corePrice = 5;
@@ -22,17 +29,9 @@ const HostingPlans = () => {
   const ssdMultiplier = isSSD ? 1.25 : 1;
 
   const vpsPrice =
-    (basePriceHD + (vpsCores) * corePrice + (vpsMemory) * memoryPrice + storagePrice + additionalIPs * ipPrice) *
+    (basePriceHD + vpsCores * corePrice + vpsMemory * memoryPrice + storagePrice + additionalIPs * ipPrice) *
     ssdMultiplier;
 
-  // Discounted prices for different durations
-  const discounts = {
-    basic: 14,
-    standard: 25,
-    premium: 33,
-  };
-
-  // VPS discounts based on the contract length
   const vpsDiscountRates = {
     3: 5, // 5% for 3-5 months
     6: 10, // 10% for 6-11 months
@@ -41,7 +40,6 @@ const HostingPlans = () => {
     48: 25, // 25% for 48+ months
   };
 
-  // Determine the applicable discount rate based on duration
   const getVpsDiscountRate = (duration) => {
     if (duration >= 48) return vpsDiscountRates[48];
     if (duration >= 24) return vpsDiscountRates[24];
@@ -57,11 +55,55 @@ const HostingPlans = () => {
   const totalVpsPriceAfterDiscount = discountedVpsPrice * duration;
   const totalSavings = totalVpsPriceBeforeDiscount - totalVpsPriceAfterDiscount;
 
-  const plans = [
-    { name: "Plano Básico", price: 20.99, discount: discounts.basic, cores: "1 vCore", ram: "Desempenho padrão", storage: "50 GB HD", domains: [".online", ".store"], databases: "1 database", websites: "1 Website", ssl: "1 ssl", bandwith: "100 GB Bandwidth", domainquanty: "Domínio Grátis : 1", email: "Email indisponível" },
-    { name: "Plano Padrão", price: 35.00, discount: discounts.standard, cores: "1 vCores", ram: "Desempenho padrão", storage: "50 GB SSD", domains: [".online", ".store", ".tech", ".cloud", ".click", ".blog"], databases: "100 databases", websites: "100 Sites", ssl: "100 ssl", bandwith: "Banda Larga Ilimitada", domainquanty: "Domínio Grátis : 1", email: "1 Email" },
-    { name: "Plano Premium", price: 50.00, discount: discounts.premium, cores: "2 vCores", ram: "Desempenho aprimorado (em até 5x)", storage: "150 GB HD/50 GB SSD", domains: [".online", ".store", ".tech", ".cloud", ".click", ".blog", ".com.br", ".com", ".org", ".top"], databases: "100 Databases", websites: "100 Sites", ssl: "100 ssl", bandwith: "Banda Larga Ilimitada", domainquanty: "Domínio Grátis : 1", email: "1 Email" },
-  ];
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    const userId = parseInt(localStorage.getItem("userId"), 10);
+
+    if (isNaN(userId)) {
+      setError("Invalid User ID. Please log in again.");
+      setLoading(false);
+      return;
+    }
+
+    const payload = {
+      userId,
+      vpsCores,
+      vpsMemory,
+      vpsStorage,
+      isSSD,
+      additionalIPs,
+      duration,
+      totalPrice: totalVpsPriceAfterDiscount,
+    };
+
+    try {
+      const response = await fetch("/api/user/vps", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSuccess(true);
+        setPreferenceId(data.preferenceId); // Armazena o preferenceId
+        setInitPoint(data.initPoint); // Armazena o init_point para gerar o QR Code
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      setError("Failed to submit the request. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -89,71 +131,13 @@ const HostingPlans = () => {
       <Navigation />
       <div style={{ backgroundColor: '#0E0E2F', minHeight: '100vh', paddingTop: '50px' }}>
         <Container className="pt-5">
-          <h2 className="text-center mb-5 text-white">Nossos Planos de Hospedagem Websites</h2>
-          <Row className="mb-5">
-            {plans.map((plan, index) => (
-              <Col md={4} key={index} className="mb-4">
-                <Card className="text-center plan-card">
-                  <Card.Header className="plan-header">
-                    {plan.name}
-                  </Card.Header>
-                  <Card.Body className="plan-body">
-                    <Form.Group controlId={`durationSelect-${index}`}>
-                      <Form.Label>Duração do Plano</Form.Label>
-                      <Form.Control as="select" value={duration} onChange={(e) => setDuration(Number(e.target.value))}>
-                        <option value={1}>1 mês</option>
-                        <option value={12}>12 meses</option>
-                      </Form.Control>
-                    </Form.Group>
-                    <Card.Title className="plan-price">
-                      {duration === 12 ? (
-                        <>
-                          R$ {((plan.price - plan.discount) * 12).toFixed(2)} (pague anualmente)
-                        </>
-                      ) : (
-                        <>
-                          R$ {(plan.price).toFixed(2)}/mês
-                        </>
-                      )}
-                    </Card.Title>
-                    {duration === 12 && (
-                      <Card.Text className="text-success">
-                        Economize R$ {(plan.discount * 12).toFixed(2)} ao escolher o plano anual!
-                      </Card.Text>
-                    )}
-                    <ListGroup variant="flush" className="mt-3">
-                      <ListGroup.Item>{plan.websites}</ListGroup.Item>
-                      <ListGroup.Item>{plan.ram}</ListGroup.Item>
-                      <ListGroup.Item>{plan.storage}</ListGroup.Item>
-                      <ListGroup.Item>{plan.bandwith}</ListGroup.Item>
-                      <ListGroup.Item>{plan.ssl}</ListGroup.Item>
-                      <ListGroup.Item>{plan.databases}</ListGroup.Item>
-                      <ListGroup.Item>{plan.email}</ListGroup.Item>
-                    </ListGroup>
-                    <div className="domains mt-3">
-                      <strong>Domínios Incluídos: (1)</strong>
-                      <div className="domain-list">
-                        {plan.domains.map((domain, idx) => (
-                          <span key={idx} className="domain-item">{domain}</span>
-                        ))}
-                      </div>
-                    </div>
-                    <Button variant="primary" className="mt-3">Escolher Plano</Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-
           <h2 className="text-center mb-4 text-white">Hospedagem VPS</h2>
           <Row className="justify-content-center">
             <Col md={6}>
               <Card className="plan-card">
-                <Card.Header className="text-center plan-header">
-                  Plano VPS Personalizado
-                </Card.Header>
+                <Card.Header className="text-center plan-header">Plano VPS Personalizado</Card.Header>
                 <Card.Body className="plan-body">
-                  <Form>
+                  <Form onSubmit={handleSubmit}>
                     <Form.Group controlId="vpsCores">
                       <Form.Label>vCores</Form.Label>
                       <Form.Control
@@ -226,8 +210,48 @@ const HostingPlans = () => {
                         <h5>Preço com Desconto: R$ {totalVpsPriceAfterDiscount.toFixed(2)}</h5>
                       </>
                     )}
-                    <Button variant="primary">Escolher Plano VPS</Button>
+                    {error && <p className="text-danger">{error}</p>}
+                    {success && <p className="text-success">Pedido de VPS enviado com sucesso!</p>}
+                    <Button type="submit" variant="primary" disabled={loading}>
+                      {loading ? "Processando..." : "Escolher Plano VPS"}
+                    </Button>
                   </Form>
+
+                  {/* Renderizar o botão do Mercado Pago */}
+                  {preferenceId && <div id="wallet_container"></div>}
+
+                  {preferenceId && typeof window !== "undefined" && window.MercadoPago && (
+                    <Script
+                      id="mercadopago-checkout"
+                      dangerouslySetInnerHTML={{
+                        __html: `
+                          const mp = new window.MercadoPago('${process.env.NEXT_PUBLIC_MERCADO_PAGO_PUBLIC_KEY}', {
+                            locale: 'pt-BR'
+                          });
+                          mp.checkout({
+                            preference: {
+                              id: '${preferenceId}'
+                            },
+                            render: {
+                              container: '#wallet_container',
+                              label: 'Pagar'
+                            }
+                          });
+                        `,
+                      }}
+                    />
+                  )}
+
+                  {/* Mostrar o QR Code usando o init_point */}
+                  {initPoint && (
+                    <div className="text-center mt-4">
+                      <h5>Escaneie o código QR para realizar o pagamento:</h5>
+                      <QRCode value={initPoint} size={200} />
+                      <p className="mt-2">
+                        Ou <a href={initPoint} target="_blank" rel="noopener noreferrer">clique aqui</a> para realizar o pagamento com outros métodos.
+                      </p>
+                    </div>
+                  )}
                 </Card.Body>
               </Card>
             </Col>
@@ -239,16 +263,18 @@ const HostingPlans = () => {
         <p>© 2024 Underhost. Todos os direitos reservados.</p>
       </footer>
 
+      <Script src="https://sdk.mercadopago.com/js/v2" strategy="afterInteractive" />
+
       <style jsx>{`
         .plan-card {
           border-radius: 15px;
-          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
           transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .plan-card:hover {
           transform: translateY(-10px);
-          box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
         .plan-header {
@@ -266,34 +292,9 @@ const HostingPlans = () => {
           padding: 20px;
         }
 
-        .plan-price {
-          font-size: 1.5rem;
-          margin-bottom: 10px;
-        }
-
         .text-success {
           color: #28a745;
           font-weight: bold;
-        }
-
-        .domains {
-          text-align: left;
-          margin-top: 15px;
-        }
-
-        .domain-list {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 5px;
-          margin-top: 10px;
-        }
-
-        .domain-item {
-          background-color: #f0f0f0;
-          border-radius: 5px;
-          padding: 5px 10px;
-          font-size: 0.9rem;
-          color: #333;
         }
       `}</style>
     </>

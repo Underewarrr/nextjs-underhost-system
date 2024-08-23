@@ -1,20 +1,48 @@
+// schema.prisma
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL") // Certifique-se de ter essa variável de ambiente configurada
 }
 
 model User {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  username    String
+  password    String
+  phoneNumber String
+  countryCode String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  vpsRequests VPSRequest[] // Relacionamento com o modelo VPSRequest
+  payments    Payment[]
+}
+
+model VPSRequest {
   id            Int      @id @default(autoincrement())
-  email         String   @unique
-  username      String
-  password      String
-  phoneNumber   String
-  countryCode   String
-  role          String   @default("user")
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int
+  vpsCores      Int
+  vpsMemory     Int
+  vpsStorage    Int
+  isSSD         Boolean
+  additionalIPs Int
+  duration      Int
+  paymentStatus String   // Status do pagamento
+  totalPrice    Float
+  preferenceId  String?  // ID da preferência do Mercado Pago (opcional)
   createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int
+  amount        Float
+  status        String
+  createdAt     DateTime @default(now())
 }
