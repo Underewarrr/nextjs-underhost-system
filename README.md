@@ -46,8 +46,8 @@ As seguintes rotas de API estão disponíveis no backend:
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/nextjs-login-system.git
-   cd nextjs-login-system
+   git clone https://github.com/seu-usuario/nextjs-underhost-system.git
+   cd nextjs-underhost-system
    ```
 
 2. Instale as dependências:
