@@ -11,7 +11,7 @@ Este é um projeto de Sistema de Gerenciamento de Maquina virtual desenvolvido c
 - **Pagamentos**: Integração com Mercado Pago para gerenciar pagamentos de VPS.
 
 ## Funcionalidades em desenvolvimento
-- **Configuração de maquina virtual**: Usando NodeJS para connectar ao OracleVM e Instancia uma maquina após a conclusão do pagamento.
+- **Configuração de maquina virtual**: Usando NodeJS para connectar ao OracleVM e Instanciar uma maquina após a conclusão do pagamento.
 
 ## Tecnologias Utilizadas
 
